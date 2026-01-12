@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aigul Bekbayeva | GIS & Data Analyst</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --secondary: #22c55e;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #e2e8f0;
+            --gradient: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);
+            --glow: 0 0 20px rgba(14, 165, 233, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* Animated background grid */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Header */
+        header {
+            padding: 4rem 0 2rem;
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+        
+        .profile-photo {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.4);
+            object-fit: cover;
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .profile-photo-placeholder {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 4rem;
+            color: var(--primary);
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.4);
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .hero-text h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 4rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            animation: slideInLeft 1s ease-out 0.2s both;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            animation: slideInLeft 1s ease-out 0.4s both;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--light);
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            animation: slideInLeft 1s ease-out 0.6s both;
+        }
+        
+        .contact-links {
+            display: flex;
+            gap: 1.5rem;
+            animation: slideInLeft 1s ease-out 0.8s both;
+        }
+        
+        .contact-links a {
+            color: var(--light);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .contact-links a:hover {
+            background: var(--primary);
+            box-shadow: var(--glow);
+            transform: translateY(-2px);
+        }
+        
+        .hero-visual {
+            position: relative;
+            height: 500px;
+            animation: fadeIn 1.5s ease-out 0.5s both;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .coordinate-box {
+            position: absolute;
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .coord-1 {
+            top: 50px;
+            left: 50px;
+            animation-delay: 0s;
+        }
+        
+        .coord-2 {
+            top: 200px;
+            right: 80px;
+            animation-delay: 1s;
+        }
+        
+        .coord-3 {
+            bottom: 100px;
+            left: 100px;
+            animation-delay: 2s;
+        }
+        
+        .coord-label {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .coord-value {
+            color: var(--secondary);
+        }
+        
+        /* Section styles */
+        section {
+            margin: 6rem 0;
+        }
+        
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 3px;
+            background: var(--gradient);
+        }
+        
+        /* Experience cards */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--gradient);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+            animation: slideInRight 0.8s ease-out both;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 0 4px var(--darker), var(--glow);
+        }
+        
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+        
+        .job-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .company {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+        }
+        
+        .date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .job-description {
+            color: var(--light);
+            opacity: 0.8;
+            line-height: 1.8;
+        }
+        
+        .job-description li {
+            margin-bottom: 0.5rem;
+            list-style-position: inside;
+        }
+        
+        /* Skills grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .skill-category {
+            padding: 2rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            animation: scaleIn 0.6s ease-out both;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .skill-category:nth-child(1) { animation-delay: 0.1s; }
+        .skill-category:nth-child(2) { animation-delay: 0.2s; }
+        .skill-category:nth-child(3) { animation-delay: 0.3s; }
+        .skill-category:nth-child(4) { animation-delay: 0.4s; }
+        
+        .skill-category:hover {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            transform: translateY(-5px);
+        }
+        
+        .skill-category h3 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        
+        .skill-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-tag:hover {
+            background: rgba(14, 165, 233, 0.2);
+            border-color: var(--primary);
+        }
+        
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card {
+            padding: 2rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            animation: slideUp 0.8s ease-out both;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .project-card:nth-child(1) { animation-delay: 0.1s; }
+        .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .project-card:nth-child(3) { animation-delay: 0.3s; }
+        
+        .project-card:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .project-card h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .project-card p {
+            color: var(--light);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .project-link {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .project-link:hover {
+            color: var(--secondary);
+            transform: translateX(5px);
+        }
+        
+        /* Education */
+        .education-grid {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .education-card {
+            padding: 2rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            animation: slideInLeft 0.8s ease-out both;
+        }
+        
+        .education-card h3 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .university {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .gpa {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 8rem;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(14, 165, 233, 0.2);
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--light);
+            opacity: 0.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+            
+            .profile-photo,
+            .profile-photo-placeholder {
+                margin: 0 auto;
+            }
+            
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-visual {
+                height: 300px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .coordinate-box {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+        
+        /* Scroll reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+    
+    <div class="container">
+        <header>
+            <div class="hero">
+                <img src="photo.jpg" alt="Aigul Bekbayeva" class="profile-photo">
+                
+                <div class="hero-text">
+                    <h1>AIGUL<br>BEKBAYEVA</h1>
+                    <p class="subtitle">GIS & Data Analyst</p>
+                    <p class="hero-description">
+                        Results-oriented data analyst specializing in spatial analysis, remote sensing, and development of data-driven solutions. Experienced in working with international organizations including ADB, FAO, and government agencies in Kazakhstan.
+                    </p>
+                    <div class="contact-links">
+                        <a href="/cdn-cgi/l/email-protection#3153545a5350544750505856445d71565c50585d1f525e5c">Email</a>
+                        <a href="tel:+77071072666">+7 (707) 107-26-66</a>
+                        <a href="https://github.com/AigulBekbayeva" target="_blank">GitHub</a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="coordinate-box coord-1">
+                        <div class="coord-label">ASTANA</div>
+                        <div class="coord-value">51.1694° N, 71.4491° E</div>
+                    </div>
+                    <div class="coordinate-box coord-2">
+                        <div class="coord-label">PROJECTS</div>
+                        <div class="coord-value">ADB • FAO • Kazakhstan</div>
+                    </div>
+                    <div class="coordinate-box coord-3">
+                        <div class="coord-label">SPECIALIZATION</div>
+                        <div class="coord-value">Remote Sensing • GIS • ML</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <section id="experience" class="reveal">
+            <h2 class="section-title">EXPERIENCE</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3 class="job-title">Leading Analyst</h3>
+                    <p class="company">NCJSC IACWR</p>
+                    <p class="date">2025 - Present</p>
+                    <ul class="job-description">
+                        <li>LSTM discharge forecast, RF, SVM classification</li>
+                        <li>Developed test GIS-based web-portal for flood forecast</li>
+                    </ul>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3 class="job-title">GIS Engineer</h3>
+                    <p class="company">LLP Akmolasvyazmontazh</p>
+                    <p class="date">2024</p>
+                    <ul class="job-description">
+                        <li>Developing web-portal for fire-reports</li>
+                        <li>Flood modeling in HEC-RAS</li>
+                        <li>Developing Power BI reports statistics</li>
+                    </ul>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3 class="job-title">Head of GIS Laboratory</h3>
+                    <p class="company">S. Seifullin Kazakh Agrotechnical University</p>
+                    <p class="date">2019 - 2023</p>
+                    <ul class="job-description">
+                        <li>Led multi-disciplinary research projects in agriculture, land use, and environmental monitoring</li>
+                        <li>Managed national and international research collaborations, securing funding for precision farming initiatives</li>
+                        <li>Supervised project teams in crop type classification, GIS-based decision support, and agrotechnology integration</li>
+                    </ul>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3 class="job-title">GIS Specialist</h3>
+                    <p class="company">LLP Astana-project</p>
+                    <p class="date">2013 - 2016</p>
+                    <ul class="job-description">
+                        <li>Work with databases, compiling, designing of cartographic materials</li>
+                        <li>Defended the project together with the lead</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="consulting" class="reveal">
+            <h2 class="section-title">CONSULTING</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3 class="job-title">GIS Analyst</h3>
+                    <p class="company">Kazakhstan Garysh Sapary</p>
+                    <p class="date">2023</p>
+                    <ul class="job-description">
+                        <li>Directed crop type classification and water channel digitization for Kazakhstan's agricultural sector</li>
+                    </ul>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3 class="job-title">GIS Consultant</h3>
+                    <p class="company">FAO</p>
+                    <p class="date">2021</p>
+                    <ul class="job-description">
+                        <li>Advised FAO on remote sensing technologies for drought monitoring, improving national resilience to climate change</li>
+                        <li>Provided policy recommendations on precision agriculture, leveraging GIS for food security planning</li>
+                    </ul>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3 class="job-title">Remote Sensing Consultant</h3>
+                    <p class="company">Asian Development Bank (ADB)</p>
+                    <p class="date">2020</p>
+                    <ul class="job-description">
+                        <li>Conducted surface energy balance modeling using drone data to assess water resource sustainability</li>
+                        <li>Developed strategies for water conservation and irrigation efficiency</li>
+                        <li>Contributed to policy briefs on climate resilience and sustainable water management</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="skills" class="reveal">
+            <h2 class="section-title">SKILLS</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>GIS & Remote Sensing</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">ArcGIS</span>
+                        <span class="skill-tag">ArcGIS Pro</span>
+                        <span class="skill-tag">QGIS</span>
+                        <span class="skill-tag">ENVI</span>
+                        <span class="skill-tag">Google Earth Engine</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Programming</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">R</span>
+                        <span class="skill-tag">pandas</span>
+                        <span class="skill-tag">matplotlib</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Web & Visualization</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Power BI</span>
+                        <span class="skill-tag">GeoServer</span>
+                        <span class="skill-tag">HTML/CSS</span>
+                        <span class="skill-tag">plotly</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Database & Tools</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">PostGIS</span>
+                        <span class="skill-tag">SPSS</span>
+                        <span class="skill-tag">Microsoft SQL</span>
+                        <span class="skill-tag">HEC-RAS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="projects" class="reveal">
+            <h2 class="section-title">PROJECTS</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3>US Census Dashboard</h3>
+                    <p>Python-based dashboard for visualizing US Census data with interactive components</p>
+                    <a href="https://github.com/AigulBekbayeva/UScensusdash" target="_blank" class="project-link">View on GitHub →</a>
+                </div>
+                
+                <div class="project-card">
+                    <h3>RDS Web Portal</h3>
+                    <p>Web portal development for remote sensing data services and GIS applications</p>
+                    <a href="https://github.com/AigulBekbayeva/rds" target="_blank" class="project-link">View on GitHub →</a>
+                </div>
+                
+                <div class="project-card">
+                    <h3>GIS Flood Model</h3>
+                    <p>Comprehensive flood forecasting system integrating GIS analysis and predictive modeling</p>
+                    <a href="https://model.qazsu.gov.kz/" target="_blank" class="project-link">View Live Site →</a>
+                </div>
+            </div>
+        </section>
+        
+        <section id="education" class="reveal">
+            <h2 class="section-title">EDUCATION</h2>
+            <div class="education-grid">
+                <div class="education-card">
+                    <h3>MSc in Geographical Information Science</h3>
+                    <p class="university">University of Nottingham, UK</p>
+                    <p class="date">2015 - 2016</p>
+                    <p class="gpa">GPA: 3.2</p>
+                </div>
+                
+                <div class="education-card">
+                    <h3>BSc in Natural Science (Geography)</h3>
+                    <p class="university">ENU named after L.N. Gumilyov, Astana</p>
+                    <p class="date">2009 - 2013</p>
+                    <p class="gpa">GPA: 3.83</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>&copy; 2025 Aigul Bekbayeva. Open to relocation and international collaboration.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">Astana, Kazakhstan</p>
+        </footer>
+    </div>
+    
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Scroll reveal animation
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+ 
